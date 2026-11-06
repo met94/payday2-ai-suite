@@ -210,11 +210,10 @@ foreach ($Name in $LoadOrder) {
         }
     }
 
-    # Member build provenance is dev-only; it also carries a timestamp.
-    foreach ($Marker in @('.lies-build', '.iter-build')) {
-        $MarkerPath = Join-Path $Dest $Marker
-        if (Test-Path -LiteralPath $MarkerPath) { Remove-Item -LiteralPath $MarkerPath -Force }
-    }
+    # Member build provenance is dev-only; it also carries a timestamp. Match
+    # any dot-file ending in -build so a future member build script is covered.
+    Get-ChildItem -LiteralPath $Dest -Force -File | Where-Object { $_.Name -like '.*-build' } |
+        ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
 
 
     # Lock assertions on the staged tree: this is what ships.
@@ -225,9 +224,11 @@ foreach ($Name in $LoadOrder) {
     foreach ($Required in @('mod.txt', 'changelog.txt', 'LICENSE', 'README.md')) {
         if (-not (Test-Path -LiteralPath (Join-Path $Dest $Required))) { Fail "staged $Name is missing $Required" }
     }
-    foreach ($Forbidden in @('.git', '.gitignore', 'dev', 'dist', 'tests', '.github', '.build', '.lies-build', '.iter-build')) {
+    foreach ($Forbidden in @('.git', '.gitignore', 'dev', 'dist', 'tests', '.github', '.build')) {
         if (Test-Path -LiteralPath (Join-Path $Dest $Forbidden)) { Fail "staged $Name ships forbidden entry $Forbidden" }
     }
+    Get-ChildItem -LiteralPath $Dest -Force -File | Where-Object { $_.Name -like '.*-build' } |
+        ForEach-Object { Fail "staged $Name ships build provenance $($_.Name)" }
 }
 } catch {
     Fail "staging failed: $($_.Exception.Message)"
@@ -300,6 +301,9 @@ Add-Type -AssemblyName System.IO.Compression
 $ZipPath = Join-Path $OutDir ('AI-Suite-{0}.zip' -f $Lock.suiteVersion)
 $ZipTemp = $ZipPath + '.partial'
 if (Test-Path -LiteralPath $ZipTemp) { Remove-Item -LiteralPath $ZipTemp -Force }
+# Drop any previous build first: a failed gate must not leave an older zip for
+# tests\run-tests.ps1 to pick up and validate as if it were this build.
+if (Test-Path -LiteralPath $ZipPath) { Remove-Item -LiteralPath $ZipPath -Force }
 # Build the archive entry by entry so every name uses '/' (the .NET Framework
 # CreateFromDirectory helper writes '\' on Windows). Write to a temp name so a
 # failed run cannot leave a half-written zip for the tests to pick up.

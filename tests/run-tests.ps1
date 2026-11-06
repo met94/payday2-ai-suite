@@ -111,11 +111,12 @@ if (-not $Zip) {
         Check ($Top.Count -eq 4) ('archive: exactly four top-level folders (found {0}: {1})' -f $Top.Count, ($Top -join ', '))
         Check (($Top | Where-Object { $Names -notcontains $_ }).Count -eq 0) 'archive: top level is only the four mods'
 
-        $Forbidden = @('dev', 'dist', 'tests', '.github', '.git', '.build', '.lies-build', '.iter-build')
+        $Forbidden = @('dev', 'dist', 'tests', '.github', '.git', '.build')
         foreach ($Entry in $Entries) {
             $Parts = $Entry.FullName -split '/'
             if ($Parts.Count -ge 2) {
                 Check ($Forbidden -notcontains $Parts[1]) ("archive: $($Entry.FullName) is not a dev-only path")
+                Check (-not ($Parts[1] -like '.*-build')) ("archive: $($Entry.FullName) is not build provenance")
             }
         }
 

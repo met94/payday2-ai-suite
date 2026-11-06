@@ -1,7 +1,7 @@
 {
-  "suiteVersion": "2026.11.06.1",
+  "suiteVersion": "2026.11.06.2",
   "released": "2026-11-06",
-  "loadOrder": ["LIES", "Monkeepers", "Iter", "Keepers"],
+  "loadOrder": ["LIES", "Monkeepers", "Iter", "Keepers", "GoonmodCustomWaypoints", "NoDuplicatedBullets"],
   "testedWith": {
     "Useful Bots": "2.6.3",
     "HopLib": "2.1.2",
@@ -15,6 +15,7 @@
       "version": "8.57.32",
       "priority": 100,
       "license": "AGPL-3.0",
+      "docs": true,
       "build": "dev/build.ps1",
       "dist": "dist/LIES"
     },
@@ -25,6 +26,7 @@
       "version": "87.4",
       "priority": 99,
       "license": "Unlicense",
+      "docs": true,
       "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
     },
     "Iter": {
@@ -34,6 +36,7 @@
       "version": "205.3",
       "priority": 40,
       "license": "Unlicense",
+      "docs": true,
       "build": "dev/build.ps1",
       "dist": "dist/Iter"
     },
@@ -44,6 +47,27 @@
       "version": "239.3",
       "priority": 10,
       "license": "Unlicense",
+      "docs": true,
+      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
+    },
+    "GoonmodCustomWaypoints": {
+      "dir": "GoonmodCustomWaypoints",
+      "source": "https://github.com/met94/payday2-mod-GoonmodCustomWaypoints",
+      "name": "GoonMod's Custom Waypoints",
+      "commit": "e82c361",
+      "version": "50",
+      "priority": 0,
+      "license": "upstream (no license file)",
+      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
+    },
+    "NoDuplicatedBullets": {
+      "dir": "NoDuplicatedBullets",
+      "source": "https://github.com/met94/payday2-mod-NoDuplicatedBullets",
+      "name": "No Duplicated Bullets",
+      "commit": "e2d9e92",
+      "version": "10",
+      "priority": 0,
+      "license": "upstream (no license file)",
       "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
     }
   }

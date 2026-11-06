@@ -1,3 +1,25 @@
+Revision 2026.11.06.2:
+
+Keepers' two required utilities now ship in the bundle.
+
+- GoonMod's Custom Waypoints 50 (e82c361) - upstream r50 by BangL: U248
+  `CarryData.pre_destroy`, NetworkHelper vector helpers, crosshair-ray removal,
+  waypoint-cycling global leak fix. Byte-identical to the deployed copy.
+- No Duplicated Bullets 10 (e2d9e92) - 248.2 maintenance: keeps the client-side
+  duplicate-damage filter, drops code the game now handles. Byte-identical to
+  the deployed copy.
+- LIES 8.57.32, Iter 205.3, Keepers 239.3, Monkeepers 87.4 unchanged.
+
+Both utilities load at priority 0 (no `priority` key), like Useful Bots, and are
+redistributed unmodified. They have no SuperBLT update feed, so only a new
+bundle replaces them. Keepers' dependency entries can stay as they are: SuperBLT
+now finds both installed and never prompts.
+
+Player notes: installing the suite no longer shows a dependency prompt for the
+two small Keepers helpers - they are inside the download. Nothing about the AI
+itself changes; enemy behaviour, navigation, bot orders and bag carrying are the
+same as 2026.11.06.1.
+
 Revision 2026.11.06.1:
 
 Documentation re-cut. Same four mods, same versions and code as 2026.11.06;

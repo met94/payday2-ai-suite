@@ -1,9 +1,14 @@
 # Maintaining the AI Suite bundle
 
-This repository holds no mod code. It pins the four member repositories at
-released commits, stages their runtime trees, gates the result, and emits one
+This repository holds no mod code. It pins the member repositories at released
+commits, stages their runtime trees, gates the result, and emits one
 ModWorkshop zip. The member repos keep their own versions, priorities, save
 files, settings menus and update feeds.
+
+The suite ships the four AI mods plus the two utility mods Keepers requires at
+runtime (`GoonmodCustomWaypoints`, `NoDuplicatedBullets`). The utilities are
+redistributed unmodified and are outside the AI ownership contract; the four AI
+mods are the ones the contract validates.
 
 ## Member repositories
 
@@ -13,8 +18,13 @@ files, settings menus and update feeds.
 | **Iter** | [met94/payday2-mod-Iter](https://github.com/met94/payday2-mod-Iter) | its `dev/build.ps1` (`dist/Iter`) |
 | **Keepers** | [met94/payday2-mod-Keepers](https://github.com/met94/payday2-mod-Keepers) | runtime copy (no `dev/`) |
 | **Monkeepers** | [met94/payday2-mod-Monkeepers](https://github.com/met94/payday2-mod-Monkeepers) | runtime copy (no `dev/`) |
+| **GoonMod's Custom Waypoints** | [met94/payday2-mod-GoonmodCustomWaypoints](https://github.com/met94/payday2-mod-GoonmodCustomWaypoints) | runtime copy (upstream r50) |
+| **No Duplicated Bullets** | [met94/payday2-mod-NoDuplicatedBullets](https://github.com/met94/payday2-mod-NoDuplicatedBullets) | runtime copy (upstream r10 + 248 trim) |
 
-Each one is expected to be checked out at `<workspace>\mods\<name>`.
+Each one is expected to be checked out at `<workspace>\mods\<name>`. The
+utilities have no `README`/`LICENSE`/`MENU_OPTIONS`, so the lock marks the four
+AI mods with `"docs": true` and the build/test gates require those files only
+for them.
 
 ## Layout
 
@@ -33,10 +43,11 @@ Each one is expected to be checked out at `<workspace>\mods\<name>`.
 ```json
 "LIES": {
   "dir": "LIES",
-  "commit": "f9f6663",
+  "commit": "8f9514f",
   "version": "8.57.32",
   "priority": 100,
   "license": "AGPL-3.0",
+  "docs": true,
   "build": "dev/build.ps1",
   "dist": "dist/LIES"
 }
@@ -87,7 +98,7 @@ and produces five phantom `missing-script` errors.
 | --- | --- | --- |
 | Ownership contract | `node <workspace>\tools\crossmod-check.mjs --root <workspace> --mods-dir <staged>\mods --ub-dir "<live>\Useful Bots" --strict` | PASS, 0 target deviations (5 gated / 2 rewrapped INFO lines) |
 | Lua syntax | `tools\luajit\luajit.exe -bl` over every staged `.lua` | 0 errors |
-| Lock + archive | `tests\run-tests.ps1` | PASS (~490 checks) |
+| Lock + archive | `tests\run-tests.ps1` | PASS (~560 checks) |
 
 The staged-bytes gate is the point: it validates the exact archive users
 install, not the working copies.
@@ -117,11 +128,16 @@ The contract itself lives in the workspace, not here:
 - **Never change a member's `priority`.** The order
   `LIES 100 -> Monkeepers 99 -> Iter 40 -> Keepers 10 -> Useful Bots 0 ->
   The Fixes -10` is the compatibility contract; the mods wrap each other's
-  functions in that order.
+  functions in that order. The two bundled utilities ship no `priority` key and
+  load at 0, like Useful Bots.
 - **Never ship dev paths.** `dev/`, `dist/`, `tests/`, `.git`, `.build` and
   `.*-build` markers are rejected by both the build and the archive tests.
 - **External mods stay external.** Useful Bots, HopLib and The Fixes are never
   bundled; they are only pinned in the notes/metadata.
+- **The utilities are outside the contract.** `GoonmodCustomWaypoints` and
+  `NoDuplicatedBullets` are redistributed unmodified; do not add ownership rows
+  or change their code in this bundle. If they ever need a fork fix, that lives
+  in their own repo and gets a new pin.
 
 ## Update feeds (why the bundle is not one)
 
@@ -129,6 +145,7 @@ The contract itself lives in the workspace, not here:
 | --- | --- |
 | Iter, Keepers, Monkeepers | SuperBLT `updates` -> GitHub `releases/latest/download/meta.json` |
 | LIES | its own menu poll of `https://raw.githubusercontent.com/met94/Little-Intelligence-Enhancements-x64/main/autoupdate.json` (`LIES.update_url`, `menumanager.lua:51`, fetched at `:922`); equality compare, links to GitHub releases, never installs |
+| GoonMod's Custom Waypoints, No Duplicated Bullets | legacy `simple_update_url` -> `pd2mods.z77.fr`; no SuperBLT `updates` entry, so nothing updates them except a new bundle (only Simple Mod Updater would, and it would pull the same upstream build) |
 
 `autoupdate.json` is served from raw GitHub and is not part of the mod folder or
 the zip. The `LIES-AI-MOD` string is only the identifier inside that JSON; LIES

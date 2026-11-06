@@ -1,8 +1,10 @@
 # AI Suite
 
 One download for the PAYDAY 2 248.2 x64 AI stack: **LIES**, **Iter**,
-**Keepers** and **Monkeepers**, packaged together and tested as one stack. The
-zip holds the four mod folders - extract all of them into `PAYDAY 2\mods\`.
+**Keepers** and **Monkeepers**, plus the two utility mods Keepers requires
+(**GoonMod's Custom Waypoints** and **No Duplicated Bullets**). Everything is
+packaged together and tested as one stack; the zip holds six folders - extract
+all of them into `PAYDAY 2\mods\`.
 
 ## What it changes in-game
 
@@ -13,6 +15,8 @@ zip holds the four mod folders - extract all of them into `PAYDAY 2\mods\`.
 - You can order your bots to move, hold position, revive and fight, and
   converted cops and jokers follow those orders too.
 - Bots pick up, carry and drop bags like players.
+- Custom waypoints let you and your friends mark spots for the bot orders, and
+  duplicate client-side damage from non-player attackers is filtered out.
 
 Every feature is tunable: each mod keeps its own settings page under
 **BLT Options**.
@@ -26,26 +30,38 @@ Every feature is tunable: each mod keeps its own settings page under
 | [**Keepers**](https://github.com/met94/payday2-mod-Keepers) | bot orders, revive assistants, converted cops and jokers | 239.3 |
 | [**Monkeepers**](https://github.com/met94/payday2-mod-Monkeepers) | bot bag logistics: pick up, carry and drop bags | 87.4 |
 
+Bundled because Keepers needs them (both are the versions this stack is played
+with):
+
+| Utility | What it does | Version |
+| --- | --- | --- |
+| [**GoonMod's Custom Waypoints**](https://github.com/met94/payday2-mod-GoonmodCustomWaypoints) | player and crew waypoints used by Keepers' positioning orders | 50 |
+| [**No Duplicated Bullets**](https://github.com/met94/payday2-mod-NoDuplicatedBullets) | filters duplicate client-side damage from non-player attackers | 10 |
+
 ## Requirements
 
-- **SuperBLT** (64-bit) - required by all four mods.
+- **SuperBLT** (64-bit) - required by all six folders.
 - [**Useful Bots 2.6.3**](https://modworkshop.net/mod/31221) + **HopLib** -
   optional, but this is the bot combat and utility layer the suite is tested
   with (intimidation, marking, target priority).
 - [**The Fixes**](https://modworkshop.net/mod/23732) - optional general-fix
   mod; it works alongside the suite.
 
+Keepers' own dependencies are already in the download, so there is no
+dependency prompt and nothing extra to fetch.
+
 ## Install
 
 1. Download `AI-Suite-<version>.zip` from the release.
-2. Extract all four folders into
+2. Extract all six folders into
    `C:\Program Files (x86)\Steam\steamapps\common\PAYDAY 2\mods`.
-3. Keep the folder names exactly `LIES`, `Iter`, `Keepers`, `Monkeepers` - the
-   mods find each other by name.
+3. Keep the folder names exactly `LIES`, `Iter`, `Keepers`, `Monkeepers`,
+   `GoonmodCustomWaypoints`, `NoDuplicatedBullets` - the mods find each other by
+   name.
 4. Optionally install Useful Bots + HopLib as well.
 5. Start the game; the settings appear under **BLT Options**.
 
-Already running one of the four? The bundle's copy replaces it - back up local
+Already running one of these? The bundle's copy replaces it - back up local
 edits first. The mods share save files with their standalone versions, so your
 settings carry over.
 
@@ -55,7 +71,9 @@ settings carry over.
   update prompt.
 - **LIES** shows its own update prompt in-game and links to its GitHub
   releases.
-- The four are versioned separately: updating one does not force a new bundle
+- **GoonMod's Custom Waypoints** and **No Duplicated Bullets** have no SuperBLT
+  update feed; they are only replaced by a new bundle.
+- The mods are versioned separately: updating one does not force a new bundle
   download. A new bundle is published when the whole stack moves.
 
 ## If something breaks
@@ -73,16 +91,22 @@ settings carry over.
 - **Iter**, **Keepers**, **Monkeepers** - TdlQ (original), BangL (Iter
   maintenance), translations by the authors listed in each `mod.txt`, 248.2
   fork maintenance by met94.
+- **GoonMod's Custom Waypoints** - Wilko (original), TdlQ (extensions); the
+  248.2 update is upstream r50 by BangL, mirrored in our fork.
+- **No Duplicated Bullets** - TdlQ; 248.2 maintenance by met94.
 - **Useful Bots** - Hoppip; not part of this download.
 
-Each mod folder ships its own `README.md`, `changelog.txt`, `MENU_OPTIONS.md`
-and `LICENSE` - those are the authoritative per-mod documents.
+The four AI mods ship their own `README.md`, `changelog.txt`, `MENU_OPTIONS.md`
+and `LICENSE` - those are the authoritative documents for them. The two
+utilities ship their upstream `mod.txt` and `changelog.txt`; they have no
+license file and are redistributed unmodified with credit.
 
 ## License
 
 This bundle repository is public domain (Unlicense). The mods keep their own
-licenses: LIES is AGPL-3.0, Iter/Keepers/Monkeepers are Unlicense. Bundling
-them together does not relicense anything.
+licenses: LIES is AGPL-3.0, Iter/Keepers/Monkeepers are Unlicense, and the two
+utilities carry no license file (credited, unchanged). Bundling them together
+does not relicense anything.
 
 ## For maintainers
 

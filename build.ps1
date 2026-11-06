@@ -115,7 +115,11 @@ function Get-CommandPath([string[]]$Names) {
 function Read-ModTxt([string]$Path) {
     if (-not (Test-Path -LiteralPath $Path)) { Fail "missing $Path" }
     try {
-        return (Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json)
+        # Some upstream mod.txt files carry a trailing comma before a closing
+        # brace or bracket. SuperBLT tolerates it; strict JSON does not.
+        $Raw = Get-Content -LiteralPath $Path -Raw
+        $Clean = [regex]::Replace($Raw, ',\s*([}\]])', '$1')
+        return ($Clean | ConvertFrom-Json)
     } catch {
         Fail "invalid JSON in $Path`: $($_.Exception.Message)"
     }
@@ -218,11 +222,14 @@ foreach ($Name in $LoadOrder) {
 
     # Lock assertions on the staged tree: this is what ships.
     $Info = Read-ModTxt (Join-Path $Dest 'mod.txt')
-    if ($Info.name -ne $Name) { Fail "staged $Name has mod.txt name '$($Info.name)'" }
+    $ModName = if ($Mod.name) { $Mod.name } else { $Name }
+    if ($Info.name -ne $ModName) { Fail "staged $Name has mod.txt name '$($Info.name)', expected '$ModName'" }
     if ($Info.version -ne $Mod.version) { Fail "staged $Name is $($Info.version), lock says $($Mod.version)" }
     if ([int]$Info.priority -ne [int]$Mod.priority) { Fail "staged $Name priority $($Info.priority), lock says $($Mod.priority)" }
-    foreach ($Required in @('mod.txt', 'changelog.txt', 'LICENSE', 'README.md')) {
-        if (-not (Test-Path -LiteralPath (Join-Path $Dest $Required))) { Fail "staged $Name is missing $Required" }
+    $Required = @('mod.txt', 'changelog.txt')
+    if ($Mod.docs) { $Required = @($Required + @('LICENSE', 'README.md')) }
+    foreach ($RequiredFile in $Required) {
+        if (-not (Test-Path -LiteralPath (Join-Path $Dest $RequiredFile))) { Fail "staged $Name is missing $RequiredFile" }
     }
     foreach ($Forbidden in @('.git', '.gitignore', 'dev', 'dist', 'tests', '.github', '.build')) {
         if (Test-Path -LiteralPath (Join-Path $Dest $Forbidden)) { Fail "staged $Name ships forbidden entry $Forbidden" }
@@ -337,7 +344,8 @@ $Size = (Get-Item -LiteralPath $ZipPath).Length
 $Lines = New-Object System.Collections.Generic.List[string]
 $Lines.Add('# AI Suite ' + $Lock.suiteVersion)
 $Lines.Add('')
-$Lines.Add('One download, four mods. Extract every folder into `PAYDAY 2\mods\`.')
+$Lines.Add('One download: the four-mod AI stack plus Keepers'' two required utilities.')
+$Lines.Add('Extract every folder into `PAYDAY 2\mods\`.')
 $Lines.Add('')
 $Lines.Add('| Mod | Version | Commit | Role | License |')
 $Lines.Add('| --- | --- | --- | --- | --- |')
@@ -348,6 +356,8 @@ foreach ($Name in $LoadOrder) {
         'Monkeepers' { 'bot bag logistics' }
         'Iter' { 'navigation, coarse search, nav-link queue' }
         'Keepers' { 'bot orders, revives, jokers' }
+        'GoonmodCustomWaypoints' { 'custom waypoints for players (Keepers requirement)' }
+        'NoDuplicatedBullets' { 'client-side duplicate-damage fix (Keepers requirement)' }
         default { '' }
     }
     $Lines.Add(('| {0} | {1} | `{2}` | {3} | {4} |' -f $Name, $Mod.version, $Mod.commit, $Role, $Mod.license))

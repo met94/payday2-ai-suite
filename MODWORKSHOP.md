@@ -7,89 +7,117 @@ page form.
 ## Page fields
 
 - **Name:** AI Suite
-- **Short description:** LIES + Iter + Keepers + Monkeepers in one download —
-  the PAYDAY 2 248.2 AI stack, tested as one.
+- **Short description:** LIES + Iter + Keepers + Monkeepers — the PAYDAY 2 248.2
+  AI stack in one download, with Keepers' two required utilities included.
 - **Category:** BLT → Gameplay Changing
 - **Tags:** Lua, Gameplay Changing, Bugfix
-- **Version:** 2026.11.06.1
+- **Version:** 2026.11.06.2
 - **Dependencies (required):** SuperBLT (64-bit)
-- **Dependencies (optional, tested):** Useful Bots 2.6.3 (`https://modworkshop.net/mod/31221`),
-  The Fixes (`https://modworkshop.net/mod/23732`)
+- **Dependencies (optional, tested):** Useful Bots 2.6.3
+  (`https://modworkshop.net/mod/31221`), The Fixes
+  (`https://modworkshop.net/mod/23732`)
 - **Thumbnail:** `art/ai-suite-thumbnail.png`
-- **Download:** `AI-Suite-2026.11.06.1.zip` (four folders at the archive root)
+- **Download:** `AI-Suite-2026.11.06.2.zip` (six folders at the archive root)
 
 ## Description (paste this)
 
-**One download, four mods.** AI Suite packages the 248.2 x64 AI stack —
-**LIES**, **Iter**, **Keepers** and **Monkeepers** — as a single archive. They
-are designed and tested to run together, and this page is the easiest way to
-install all four with matching versions.
+**One download, six folders, one tested stack.** AI Suite packages the
+PAYDAY 2 248.2 x64 AI setup: **LIES**, **Iter**, **Keepers** and
+**Monkeepers**, plus the two utility mods **Keepers requires** —
+**GoonMod's Custom Waypoints** and **No Duplicated Bullets**. All of it is
+tested together, so you do not have to hunt down dependency prompts or match
+versions.
 
-Each mod is its own folder with its own settings page, changelog and license, and
-each keeps its own update path. The bundle only packages them; nothing is merged
-or rewritten.
+Each mod keeps its own folder, its own settings page, its own changelog and its
+own update path. The bundle only packages them — nothing is merged or rewritten.
 
-### What is in the download
+### What each mod does
 
-- **LIES 8.57.32** — enemy AI: detection, aim, cover use, suppression, travel and
-  squad coordination. Cops push together, take sensible cover and no longer know
-  where you are at all times.
-- **Iter 205.3** — navigation: path streaming, coarse-search caching, nav-link
-  queueing, direct-to-pos, path extension and per-level nav fixes. NPCs stop
-  clumping on ladders, doors and vaults, and maps whose nav data broke after U247
-  path again.
-- **Keepers 239.3** — bot orders: stationary, use cover, patrol, follow and hold,
-  precise waypoint positioning, revive assistants, joker control and shout
-  filtering.
-- **Monkeepers 87.4** — bot bag logistics: teammates pick up, carry and drop bags,
-  use bag-capable ziplines, and deliver to vehicles that accept the loot.
+**LIES — enemy AI** · [source and details](https://github.com/met94/Little-Intelligence-Enhancements-x64)
 
-Every feature can be tuned or turned off: each mod has its own page under
-**BLT Options**.
+The big one. Cops detect you more plausibly, lose track of you, evaluate cover
+against the actual threat, aim and suppress with more variation, and coordinate
+pushes as squads instead of trickling in one by one. Includes fixes for special
+units (shields, tasers, tanks, phalanx) and optional "Spicy Tactics" spawn and
+tactics pressure (off by default). Every part is tunable in its own menu.
+
+**Iter — navigation** · [source and details](https://github.com/met94/payday2-mod-Iter)
+
+Fixes how NPCs move between places. Paths are streamlined and cached, ladders,
+doors and vaults are queued instead of dogpiled, units can be sent directly to a
+position, and their path is extended ahead while they walk. Adds per-level nav
+fixes for maps whose nav data broke after U247. Iter is what makes the AI feel
+fluid rather than stuck.
+
+**Keepers — bot orders** · [source and details](https://github.com/met94/payday2-mod-Keepers)
+
+Lets you command your AI teammates and jokers: stationary, use cover, patrol,
+follow and hold; precise positioning via waypoints; sending bots to interact
+with objects or carry bags; revive assistance; custom joker names and health
+bars; and shout filtering so marking cops does not reassign your bots.
+
+**Monkeepers — bot bag logistics** · [source and details](https://github.com/met94/payday2-mod-Monkeepers)
+
+Your bots pick up, carry and drop loot bags like players. It learns routes from
+where you take a bag to where it lands, applies them to the bags around that
+spot, and expires them on its own. Bots catch thrown bags, use bag-capable
+ziplines and pick bags off shelves. Requires Keepers.
+
+**GoonMod's Custom Waypoints — utility** · [source and details](https://github.com/met94/payday2-mod-GoonmodCustomWaypoints)
+
+Player and crew waypoints, including the prev/next waypoint list. Keepers uses
+these marks for its positioning orders.
+
+**No Duplicated Bullets — utility** · [source and details](https://github.com/met94/payday2-mod-NoDuplicatedBullets)
+
+As a client, filters damage that should only be applied by the host, so
+non-player attackers cannot produce duplicate damage locally. As host it does
+nothing.
 
 ### Requirements
 
-- **PAYDAY 2 248.2 x64** and **SuperBLT**.
-- **Useful Bots 2.6.3** + **HopLib** — optional, but this is the bot combat and
+- **PAYDAY 2 248.2 x64** and **SuperBLT** — required.
+- **Useful Bots 2.6.3 + HopLib** — optional, but this is the bot combat and
   utility layer the suite is tested with (intimidation, marking, target
-  priority). Get Useful Bots here: https://modworkshop.net/mod/31221
+  priority): https://modworkshop.net/mod/31221
 - **The Fixes** — optional general-fix mod, works alongside the suite:
   https://modworkshop.net/mod/23732
+
+Keepers' dependencies are already inside the download, so SuperBLT will not
+prompt for anything.
 
 ### Installation
 
 1. Close PAYDAY 2.
-2. Extract the archive so the four folders end up here:
-   `...\PAYDAY 2\mods\LIES\`, `...\mods\Iter\`, `...\mods\Keepers\`,
-   `...\mods\Monkeepers\` — each with its `mod.txt` directly inside.
+2. Extract the archive so all six folders end up in
+   `...\PAYDAY 2\mods\`: `LIES`, `Iter`, `Keepers`, `Monkeepers`,
+   `GoonmodCustomWaypoints`, `NoDuplicatedBullets` — each with its `mod.txt`
+   directly inside.
 3. Start the game. Settings appear under **Mod Options**.
 
 Keep the folder names exactly as they are: the mods find each other by name, and
-Monkeepers requires Keepers.
+Monkeepers requires Keepers. Do not keep two copies of the same mod folder —
+SuperBLT treats the name as the dependency key.
 
-Already using one of these mods standalone? The bundle's copy replaces it — your
-save files are shared with the standalone versions, so settings carry over. Do
-not keep two copies of the same mod folder; SuperBLT treats the name as the
-dependency key and one copy will win unpredictably.
+Already using one of these mods standalone? The bundle's copy replaces it. Save
+files are shared with the standalone versions, so your settings carry over.
 
 ### Updating
 
 - Iter, Keepers and Monkeepers update through SuperBLT's normal update prompt.
 - LIES shows its own update prompt in-game and links to its GitHub releases.
-- The four are versioned separately, so updating one does not force a new bundle
+- The two utilities have no SuperBLT update feed; they are replaced by a new
+  bundle.
+- Each mod is versioned separately, so updating one does not force a new bundle
   download. A new bundle is published when the whole stack moves.
 
 ### If something breaks
 
-1. Check the newest file in `PAYDAY 2\mods\logs\` — a Lua error names the file and
-   therefore the mod that failed.
-2. Report the bug on that mod's repository:
-   - LIES: https://github.com/met94/Little-Intelligence-Enhancements-x64
-   - Iter: https://github.com/met94/payday2-mod-Iter
-   - Keepers: https://github.com/met94/payday2-mod-Keepers
-   - Monkeepers: https://github.com/met94/payday2-mod-Monkeepers
-3. Installation or packaging problems (missing folder, wrong structure) belong in
-   the bundle repository:
+1. Check the newest file in `PAYDAY 2\mods\logs\` — a Lua error names the file
+   and therefore the mod that failed.
+2. Report the bug on that mod's repository (linked under each mod above).
+3. Installation or packaging problems (missing folder, wrong structure) belong
+   in the bundle repository:
    https://github.com/met94/payday2-ai-suite
 
 ### Credits
@@ -99,23 +127,32 @@ dependency key and one copy will win unpredictably.
 - **Iter**, **Keepers**, **Monkeepers** — original mods by TdlQ; Iter maintenance
   by BangL; translations by the authors listed in each `mod.txt`; 248.2 fork
   maintenance by met94.
+- **GoonMod's Custom Waypoints** — Wilko (original), TdlQ (extensions); r50
+  248.2 update by BangL, mirrored unmodified.
+- **No Duplicated Bullets** — TdlQ; 248.2 maintenance by met94.
 - **Useful Bots** — Hoppip (not part of this download).
 - Decompiled game reference: steam-test1/Payday-2-LuaJIT-Complete.
 
-Each mod folder ships its own `README.md`, `changelog.txt`, `MENU_OPTIONS.md` and
-`LICENSE` — those are the authoritative documents for that mod.
+The four AI mods ship their own `README.md`, `changelog.txt`, `MENU_OPTIONS.md`
+and `LICENSE`. The two utilities ship their upstream `mod.txt` and
+`changelog.txt`; they have no license file and are redistributed unchanged with
+credit.
 
 ### License
 
-The bundle repository is public domain (Unlicense). The mods keep their own
-licenses: LIES is AGPL-3.0, Iter/Keepers/Monkeepers are Unlicense. Bundling them
-does not relicense anything.
+The bundle repository is public domain (Unlicense). LIES is AGPL-3.0; Iter,
+Keepers and Monkeepers are Unlicense; the two utilities carry no license file.
+Bundling them does not relicense anything.
 
 ### Changelog
 
-**2026.11.06.1** — documentation re-cut: same mods, same versions and code as
-2026.11.06; each folder now ships a rewritten, player-facing README. Nothing
-changes in-game.
+**2026.11.06.2** — GoonMod's Custom Waypoints 50 and No Duplicated Bullets 10 are
+now bundled, so Keepers' dependencies are satisfied by the download itself (no
+SuperBLT dependency prompt). Both are the versions the suite is played with;
+neither is modified.
+
+**2026.11.06.1** — documentation re-cut: same mods and code as 2026.11.06; each
+folder ships a rewritten, player-facing README. Nothing changes in-game.
 
 **2026.11.06** — first bundle: LIES 8.57.32, Iter 205.3, Keepers 239.3,
 Monkeepers 87.4.
@@ -123,9 +160,9 @@ Monkeepers 87.4.
 ## Notes for the upload
 
 - Upload the zip from the GitHub release
-  `https://github.com/met94/payday2-ai-suite/releases/tag/v2026.11.06.1`
-  (`AI-Suite-2026.11.06.1.zip`, SHA-256
-  `1F5198DBC202B1B583573B91A6683C7667AACD9DB9DE265752085F0935F84C75`).
-- The archive root must contain the four folders, not a wrapper folder — it
+  `https://github.com/met94/payday2-ai-suite/releases/tag/v2026.11.06.2`
+  (`AI-Suite-2026.11.06.2.zip`, SHA-256 is printed in the release notes next to
+  it).
+- The archive root must contain the six folders, not a wrapper folder — it
   already does.
 - ModWorkshop renders Markdown; the description above is plain Markdown.

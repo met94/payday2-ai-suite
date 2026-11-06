@@ -11,8 +11,8 @@
     "LIES": {
       "dir": "LIES",
       "source": "https://github.com/met94/Little-Intelligence-Enhancements-x64",
-      "commit": "33db6c6",
-      "version": "8.57.30",
+      "commit": "f9f6663",
+      "version": "8.57.32",
       "priority": 100,
       "license": "AGPL-3.0",
       "build": "dev/build.ps1",
@@ -30,8 +30,8 @@
     "Iter": {
       "dir": "Iter",
       "source": "https://github.com/met94/payday2-mod-Iter",
-      "commit": "5fadbbb",
-      "version": "205.2",
+      "commit": "44f6f8d",
+      "version": "205.3",
       "priority": 40,
       "license": "Unlicense",
       "build": "dev/build.ps1",

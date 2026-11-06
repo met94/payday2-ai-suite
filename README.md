@@ -13,9 +13,9 @@ there.
 
 | Mod | Role | Version | License |
 | --- | --- | --- | --- |
-| **LIES** | enemy AI: detection, aim, cover, travel, squad coordination | 8.57.30 | AGPL-3.0 |
+| **LIES** | enemy AI: detection, aim, cover, travel, squad coordination | 8.57.32 | AGPL-3.0 |
 | **Monkeepers** | bot bag logistics and drop objectives | 87.4 | Unlicense |
-| **Iter** | navigation core: coarse search, nav-link queue, level nav fixes | 205.2 | Unlicense |
+| **Iter** | navigation core: coarse search, nav-link queue, level nav fixes | 205.3 | Unlicense |
 | **Keepers** | bot orders, revive assistants, converted cops/jokers | 239.3 | Unlicense |
 
 Load order is part of the integration and ships inside each `mod.txt`

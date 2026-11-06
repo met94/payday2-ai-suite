@@ -2,9 +2,11 @@ Revision 2026.11.06:
 
 First AI Suite bundle. One download, four mod folders.
 
-- LIES 8.57.30 (33db6c6) - enemy AI
+- LIES 8.57.32 (f9f6663) - enemy AI: Reaction Level rework with a new HIGH
+  value, taser settle-check crash fix (8.57.31)
 - Monkeepers 87.4 (cbb0aad) - bot bag logistics
-- Iter 205.2 (5fadbbb) - navigation
+- Iter 205.3 (44f6f8d) - navigation: opaque-userdata shape audit, no gameplay
+  change
 - Keepers 239.3 (6601444) - bot orders
 
 Load order (priority descending): LIES 100, Monkeepers 99, Iter 40,
@@ -16,4 +18,9 @@ contains no merged code. Per-mod update feeds are unchanged.
 Player notes: download one zip, extract the four folders into mods\, and you
 get the full AI stack that used to need four separate installs. Enemy AI,
 navigation, bot orders and bot bag carrying all behave exactly as in the
-individual releases; Useful Bots still works alongside them.
+individual releases; Useful Bots still works alongside them. Two things worth
+knowing if you are coming from the individual 8.57.30 / 205.2 builds: LIES
+Reaction Level gained a HIGH setting and the menu values moved, so a profile
+that had ULTRA-VIOLENCE selected will show HIGH until you pick ULTRA again;
+and the 8.57.31 fix removes a taser-related crash, so Door Watching can stay
+on. Iter 205.3 changes no gameplay.

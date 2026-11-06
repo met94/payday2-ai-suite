@@ -1,0 +1,19 @@
+Revision 2026.11.06:
+
+First AI Suite bundle. One download, four mod folders.
+
+- LIES 8.57.30 (33db6c6) - enemy AI
+- Monkeepers 87.4 (cbb0aad) - bot bag logistics
+- Iter 205.2 (5fadbbb) - navigation
+- Keepers 239.3 (6601444) - bot orders
+
+Load order (priority descending): LIES 100, Monkeepers 99, Iter 40,
+Keepers 10. Tested with Useful Bots 2.6.3 + HopLib 2.1.2; The Fixes optional.
+
+The bundle is assembled from the four mod repositories at pinned commits; it
+contains no merged code. Per-mod update feeds are unchanged.
+
+Player notes: download one zip, extract the four folders into mods\, and you
+get the full AI stack that used to need four separate installs. Enemy AI,
+navigation, bot orders and bot bag carrying all behave exactly as in the
+individual releases; Useful Bots still works alongside them.

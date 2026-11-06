@@ -1,0 +1,50 @@
+{
+  "suiteVersion": "2026.11.06",
+  "released": "2026-11-06",
+  "loadOrder": ["LIES", "Monkeepers", "Iter", "Keepers"],
+  "testedWith": {
+    "Useful Bots": "2.6.3",
+    "HopLib": "2.1.2",
+    "The Fixes": "optional"
+  },
+  "mods": {
+    "LIES": {
+      "dir": "LIES",
+      "source": "https://github.com/met94/Little-Intelligence-Enhancements-x64",
+      "commit": "33db6c6",
+      "version": "8.57.30",
+      "priority": 100,
+      "license": "AGPL-3.0",
+      "build": "dev/build.ps1",
+      "dist": "dist/LIES"
+    },
+    "Monkeepers": {
+      "dir": "Monkeepers",
+      "source": "https://github.com/met94/payday2-mod-Monkeepers",
+      "commit": "cbb0aad",
+      "version": "87.4",
+      "priority": 99,
+      "license": "Unlicense",
+      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github"]
+    },
+    "Iter": {
+      "dir": "Iter",
+      "source": "https://github.com/met94/payday2-mod-Iter",
+      "commit": "5fadbbb",
+      "version": "205.2",
+      "priority": 40,
+      "license": "Unlicense",
+      "build": "dev/build.ps1",
+      "dist": "dist/Iter"
+    },
+    "Keepers": {
+      "dir": "Keepers",
+      "source": "https://github.com/met94/payday2-mod-Keepers",
+      "commit": "6601444",
+      "version": "239.3",
+      "priority": 10,
+      "license": "Unlicense",
+      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github"]
+    }
+  }
+}

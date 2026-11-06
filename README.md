@@ -52,14 +52,20 @@ detect `Keepers` by name and by `_G.Keepers`.
 
 ## Updates
 
-Per-mod update feeds are unchanged:
+Per-mod update feeds are unchanged, and none of them knows about this bundle:
 
-- Iter, Keepers, Monkeepers: their GitHub `releases/latest/download/meta.json`
-- LIES: its ModWorkshop feed (`autoupdate.json`, `LIES-AI-MOD`)
+- **Iter, Keepers, Monkeepers** use SuperBLT's `updates` entry pointing at their
+  GitHub `releases/latest/download/meta.json`, so SuperBLT offers their updates.
+- **LIES** has no ModWorkshop page and no SuperBLT feed. Its own menu checks
+  `https://raw.githubusercontent.com/met94/Little-Intelligence-Enhancements-x64/main/autoupdate.json`
+  at startup (`LIES.update_url`, `menumanager.lua`), compares the advertised
+  version for equality, and links to the GitHub releases page. It never
+  downloads or installs anything. `autoupdate.json` is served from raw GitHub
+  and is not part of the mod folder (nor of this zip).
 
-So SuperBLT will still offer per-mod updates. That is intentional: you are not
-locked to this bundle's cadence. When the suite moves as a whole, a new bundle
-is cut with the versions listed in `suite.lock.json`.
+So you can update a single mod and stay on the bundle's other three; when the
+suite moves as a whole, a new bundle is cut with the versions in
+`suite.lock.json`.
 
 ## Building the bundle
 

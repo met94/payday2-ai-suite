@@ -162,6 +162,7 @@ Set-Content -LiteralPath $StageMarker -Encoding utf8 -Value (@(
 # ---------------------------------------------------------------------------
 # Stage every member
 # ---------------------------------------------------------------------------
+try {
 foreach ($Name in $LoadOrder) {
     $Mod = $Lock.mods.$Name
     $RepoDir = Join-Path $WorkspaceRoot ('mods\' + $Mod.dir)
@@ -177,6 +178,9 @@ foreach ($Name in $LoadOrder) {
 
     # A temporary worktree at the pinned commit: the member's own build script
     # expects a real .git, and the member checkout itself stays untouched.
+    # Prune first: a build killed mid-way leaves a registration whose directory
+    # this script has since deleted, and `worktree add` refuses those.
+    Invoke-Native $Git @('-C', $RepoDir, 'worktree', 'prune') -Quiet | Out-Null
     $Src = Join-Path $SrcRoot $Name
     $AddResult = Invoke-Native $Git @('-C', $RepoDir, 'worktree', 'add', '--detach', $Src, $Resolved)
     if ($AddResult.Code -ne 0) { Fail "git worktree add failed for $Name" }
@@ -199,12 +203,19 @@ foreach ($Name in $LoadOrder) {
         Copy-Item -LiteralPath $DistDir -Destination $StageMods -Recurse -Force
     } else {
         $Exclude = @('.git', '.gitignore', 'dev', 'dist', 'tests', '.github')
-        if ($Mod.exclude) { $Exclude = @($Mod.exclude) }
+        if ($Mod.exclude) { $Exclude = @($Exclude + @($Mod.exclude) | Sort-Object -Unique) }
         New-Item -ItemType Directory -Force $Dest | Out-Null
         Get-ChildItem -LiteralPath $Src -Force | Where-Object { $Exclude -notcontains $_.Name } | ForEach-Object {
             Copy-Item -LiteralPath $_.FullName -Destination $Dest -Recurse -Force
         }
     }
+
+    # Member build provenance is dev-only; it also carries a timestamp.
+    foreach ($Marker in @('.lies-build', '.iter-build')) {
+        $MarkerPath = Join-Path $Dest $Marker
+        if (Test-Path -LiteralPath $MarkerPath) { Remove-Item -LiteralPath $MarkerPath -Force }
+    }
+
 
     # Lock assertions on the staged tree: this is what ships.
     $Info = Read-ModTxt (Join-Path $Dest 'mod.txt')
@@ -214,17 +225,23 @@ foreach ($Name in $LoadOrder) {
     foreach ($Required in @('mod.txt', 'changelog.txt', 'LICENSE', 'README.md')) {
         if (-not (Test-Path -LiteralPath (Join-Path $Dest $Required))) { Fail "staged $Name is missing $Required" }
     }
-    foreach ($Forbidden in @('.git', '.gitignore', 'dev', 'dist', 'tests', '.github', '.build')) {
+    foreach ($Forbidden in @('.git', '.gitignore', 'dev', 'dist', 'tests', '.github', '.build', '.lies-build', '.iter-build')) {
         if (Test-Path -LiteralPath (Join-Path $Dest $Forbidden)) { Fail "staged $Name ships forbidden entry $Forbidden" }
     }
 }
-
-Remove-StagedWorktrees
+} catch {
+    Fail "staging failed: $($_.Exception.Message)"
+} finally {
+    Remove-StagedWorktrees
+}
 
 # ---------------------------------------------------------------------------
 # Gates
 # ---------------------------------------------------------------------------
 if (-not $SkipGates) {
+    $Node = Get-CommandPath @('node.exe', 'node')
+    if (-not $Node) { Fail 'node not found in PATH (needed for the ownership and Lua gates)' }
+
     Step 'ownership gate (crossmod-check --strict)'
     if (-not $UbDir) {
         if ($env:PD2_UB_DIR) {
@@ -251,7 +268,7 @@ if (-not $SkipGates) {
 
     $Checker = Join-Path $WorkspaceRoot 'tools\crossmod-check.mjs'
     if (-not (Test-Path -LiteralPath $Checker)) { Fail "missing $Checker" }
-    $CheckResult = Invoke-Native 'node' @($Checker, '--root', $ContractRoot, '--mods-dir', $StageMods, '--ub-dir', $UbDir, '--strict')
+    $CheckResult = Invoke-Native $Node @($Checker, '--root', $ContractRoot, '--mods-dir', $StageMods, '--ub-dir', $UbDir, '--strict')
     if ($CheckResult.Code -ne 0) { Fail 'crossmod-check --strict reported a target deviation' }
 
     Step 'Lua syntax gate'
@@ -266,7 +283,7 @@ if (-not $SkipGates) {
     } else {
         $LuaCheck = Join-Path $WorkspaceRoot 'tools\lua-check.mjs'
         if (-not (Test-Path -LiteralPath $LuaCheck)) { Fail 'no luajit and no tools\lua-check.mjs fallback' }
-        $LuaResult = Invoke-Native 'node' @($LuaCheck, $StageMods)
+        $LuaResult = Invoke-Native $Node @($LuaCheck, $StageMods)
         if ($LuaResult.Code -ne 0) { Fail 'lua-check reported a syntax error' }
     }
 } else {
@@ -281,25 +298,34 @@ New-Item -ItemType Directory -Force $OutDir | Out-Null
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 Add-Type -AssemblyName System.IO.Compression
 $ZipPath = Join-Path $OutDir ('AI-Suite-{0}.zip' -f $Lock.suiteVersion)
-if (Test-Path -LiteralPath $ZipPath) { Remove-Item -LiteralPath $ZipPath -Force }
+$ZipTemp = $ZipPath + '.partial'
+if (Test-Path -LiteralPath $ZipTemp) { Remove-Item -LiteralPath $ZipTemp -Force }
 # Build the archive entry by entry so every name uses '/' (the .NET Framework
-# CreateFromDirectory helper writes '\' on Windows).
-$Zip = [System.IO.Compression.ZipFile]::Open($ZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
+# CreateFromDirectory helper writes '\' on Windows). Write to a temp name so a
+# failed run cannot leave a half-written zip for the tests to pick up.
 try {
-    foreach ($Name in $LoadOrder) {
-        $ModDir = Join-Path $StageMods $Name
-        foreach ($File in Get-ChildItem -LiteralPath $ModDir -Recurse -File -Force) {
-            $Relative = $File.FullName.Substring($StageMods.Length + 1).Replace('\', '/')
-            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
-                $Zip,
-                $File.FullName,
-                $Relative,
-                [System.IO.Compression.CompressionLevel]::Optimal
-            ) | Out-Null
+    $Zip = [System.IO.Compression.ZipFile]::Open($ZipTemp, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        foreach ($Name in $LoadOrder) {
+            $ModDir = Join-Path $StageMods $Name
+            foreach ($File in Get-ChildItem -LiteralPath $ModDir -Recurse -File -Force) {
+                $Relative = $File.FullName.Substring($StageMods.Length + 1).Replace('\', '/')
+                [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                    $Zip,
+                    $File.FullName,
+                    $Relative,
+                    [System.IO.Compression.CompressionLevel]::Optimal
+                ) | Out-Null
+            }
         }
+    } finally {
+        $Zip.Dispose()
     }
-} finally {
-    $Zip.Dispose()
+    if (Test-Path -LiteralPath $ZipPath) { Remove-Item -LiteralPath $ZipPath -Force }
+    Move-Item -LiteralPath $ZipTemp -Destination $ZipPath -Force
+} catch {
+    if (Test-Path -LiteralPath $ZipTemp) { Remove-Item -LiteralPath $ZipTemp -Force }
+    Fail "archive failed: $($_.Exception.Message)"
 }
 $Hash = (Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256).Hash
 $Size = (Get-Item -LiteralPath $ZipPath).Length

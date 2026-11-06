@@ -72,18 +72,25 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tests\run-tests.ps1
 `build.ps1`:
 
 1. reads `suite.lock.json` (repo, commit, version, priority per mod);
-2. extracts each commit with `git archive` (no changes to the mod repos);
+2. checks each commit out in a temporary worktree under `.build\src\` (the
+   member checkouts are not switched or modified; the worktrees are removed on
+   exit, success or failure, and stale registrations are pruned before each
+   `worktree add`);
 3. runs each mod's own `dev/build.ps1` where it exists (LIES, Iter) and
-   copies the runtime tree otherwise (Keepers, Monkeepers);
+   copies the runtime tree otherwise (Keepers, Monkeepers); the member build
+   markers (`.lies-build`, `.iter-build`) are dev provenance and are dropped;
 4. asserts the staged `mod.txt` name/version/priority and that no `dev/`,
-   `dist/`, `tests/` or `.git` ships;
+   `dist/`, `tests/`, `.git` or build marker ships;
 5. runs `crossmod-check --strict` against the staged bytes with a real
    Useful Bots 2.6.3 tree (`-UbDir`, `PD2_UB_DIR`, or the live install from
    `workspace.json`), plus a Lua syntax gate;
 6. writes `dist\AI-Suite-<version>.zip` and `-release-notes.md` with the
-   SHA-256.
+   SHA-256 (via a temp file, so a failed run never leaves a half-written zip).
 
-Options: `-WorkspaceRoot`, `-UbDir`, `-OutDir`, `-SkipGates` (dev only).
+Options: `-WorkspaceRoot`, `-ContractRoot`, `-UbDir`, `-OutDir`, `-SkipGates`
+(dev only). `-ContractRoot` points the ownership gate at a workspace checkout
+whose `docs\reference\ai-suite-ownership.json` is the one to validate against —
+use it to gate before a contract fix has merged into the workspace.
 Never point `-UbDir` at the 2024 `old_mods` audit copy: it lacks the per-script
 files and produces five phantom `missing-script` errors.
 

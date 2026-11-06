@@ -12,13 +12,15 @@
       powershell -NoProfile -ExecutionPolicy Bypass -File tests\run-tests.ps1 -Zip dist\AI-Suite-2026.11.06.zip
 #>
 param(
-    [string]$Zip = ''
+    [string]$Zip = '',
+    [string]$WorkspaceRoot = ''
 )
 
 $ErrorActionPreference = 'Stop'
 
 $RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-$WorkspaceRoot = (Resolve-Path -LiteralPath (Join-Path $RepoRoot '..\..')).Path
+if (-not $WorkspaceRoot) { $WorkspaceRoot = Join-Path $RepoRoot '..\..' }
+$WorkspaceRoot = (Resolve-Path -LiteralPath $WorkspaceRoot).Path
 $Failures = New-Object System.Collections.Generic.List[string]
 $Checks = 0
 
@@ -33,7 +35,11 @@ function Read-Json([string]$Path) {
 }
 
 $Git = (Get-Command git.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1).Source
-if (-not $Git) { $Git = (Get-Command git -CommandType Application | Select-Object -First 1).Source }
+if (-not $Git) { $Git = (Get-Command git -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1).Source }
+if (-not $Git) {
+    Write-Host 'ERROR: git not found in PATH; the lock cannot be checked against the member repos' -ForegroundColor Red
+    exit 1
+}
 
 $Lock = Read-Json (Join-Path $RepoRoot 'suite.lock.json')
 $Names = @($Lock.mods.PSObject.Properties | ForEach-Object { $_.Name })
@@ -105,7 +111,7 @@ if (-not $Zip) {
         Check ($Top.Count -eq 4) ('archive: exactly four top-level folders (found {0}: {1})' -f $Top.Count, ($Top -join ', '))
         Check (($Top | Where-Object { $Names -notcontains $_ }).Count -eq 0) 'archive: top level is only the four mods'
 
-        $Forbidden = @('dev', 'dist', 'tests', '.github', '.git', '.build')
+        $Forbidden = @('dev', 'dist', 'tests', '.github', '.git', '.build', '.lies-build', '.iter-build')
         foreach ($Entry in $Entries) {
             $Parts = $Entry.FullName -split '/'
             if ($Parts.Count -ge 2) {

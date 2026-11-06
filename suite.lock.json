@@ -25,7 +25,7 @@
       "version": "87.4",
       "priority": 99,
       "license": "Unlicense",
-      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github"]
+      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
     },
     "Iter": {
       "dir": "Iter",
@@ -44,7 +44,7 @@
       "version": "239.3",
       "priority": 10,
       "license": "Unlicense",
-      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github"]
+      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
     }
   }
 }

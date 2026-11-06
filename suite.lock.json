@@ -1,5 +1,5 @@
 {
-  "suiteVersion": "2026.11.06",
+  "suiteVersion": "2026.11.06.1",
   "released": "2026-11-06",
   "loadOrder": ["LIES", "Monkeepers", "Iter", "Keepers"],
   "testedWith": {
@@ -11,7 +11,7 @@
     "LIES": {
       "dir": "LIES",
       "source": "https://github.com/met94/Little-Intelligence-Enhancements-x64",
-      "commit": "f9f6663",
+      "commit": "8f9514f",
       "version": "8.57.32",
       "priority": 100,
       "license": "AGPL-3.0",
@@ -21,7 +21,7 @@
     "Monkeepers": {
       "dir": "Monkeepers",
       "source": "https://github.com/met94/payday2-mod-Monkeepers",
-      "commit": "cbb0aad",
+      "commit": "c1307b7",
       "version": "87.4",
       "priority": 99,
       "license": "Unlicense",
@@ -30,7 +30,7 @@
     "Iter": {
       "dir": "Iter",
       "source": "https://github.com/met94/payday2-mod-Iter",
-      "commit": "44f6f8d",
+      "commit": "891b017",
       "version": "205.3",
       "priority": 40,
       "license": "Unlicense",
@@ -40,7 +40,7 @@
     "Keepers": {
       "dir": "Keepers",
       "source": "https://github.com/met94/payday2-mod-Keepers",
-      "commit": "6601444",
+      "commit": "26408cb",
       "version": "239.3",
       "priority": 10,
       "license": "Unlicense",

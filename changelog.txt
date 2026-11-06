@@ -1,3 +1,22 @@
+Revision 2026.11.06.1:
+
+Documentation re-cut. Same four mods, same versions and code as 2026.11.06;
+only the READMEs inside the folders changed.
+
+- LIES 8.57.32 (8f9514f) - README rewritten for players, port details moved to
+  MAINTAINING.md (not shipped)
+- Monkeepers 87.4 (c1307b7) - same treatment
+- Iter 205.3 (891b017) - same treatment
+- Keepers 239.3 (26408cb) - same treatment
+
+No Lua, option, priority or feed change. The bundle pins advanced to the docs
+commits so the shipped folders carry the new READMEs; MAINTAINING.md is excluded
+from the Keepers/Monkeepers copies and is not in any folder.
+
+Player notes: nothing changes in-game. If you already run 2026.11.06 there is
+nothing to update for gameplay - this build only carries the rewritten,
+easier-to-read documentation inside each mod folder.
+
 Revision 2026.11.06:
 
 First AI Suite bundle. One download, four mod folders.

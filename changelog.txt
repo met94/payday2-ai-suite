@@ -1,3 +1,24 @@
+Revision 2026.11.07.1:
+
+Split into two downloads. No mod code changes for the AI mods.
+
+- `AI-Suite-<version>.zip` now carries only the four AI mods we maintain
+  (LIES 8.57.33, Iter 205.3, Keepers 239.3, Monkeepers 87.4).
+- `AI-Suite-Dependencies-<version>.zip` carries Keepers' required upstream
+  packages, unmodified: Simple Mod Updater 34, GoonMod's Custom Waypoints 50,
+  No Duplicated Bullets 10. SMU resolves the legacy `SimpleModUpdater` update
+  entries those two declare, so the dependency chain works and SuperBLT does not
+  offer a bogus updater.
+- Useful Bots 2.6.3 + HopLib is listed as recommended external (original
+  ModWorkshop page), no longer implied as part of the download. The Fixes stays
+  optional.
+- The assembler learned archive groups: one lock file, two zips, per-archive
+  layout tests, one set of release notes each.
+
+Player notes: nothing changes in-game. Install both archives (seven folders in
+total) unless you already have the three dependency mods. The AI mods update
+through SuperBLT; the dependency mods keep the original author's update chain.
+
 Revision 2026.11.07:
 
 LIES update detection moves to SuperBLT. No gameplay change; the other five

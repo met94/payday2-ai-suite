@@ -1,7 +1,11 @@
 {
-  "suiteVersion": "2026.11.07",
+  "suiteVersion": "2026.11.07.1",
   "released": "2026-11-07",
-  "loadOrder": ["LIES", "Monkeepers", "Iter", "Keepers", "GoonmodCustomWaypoints", "NoDuplicatedBullets"],
+  "loadOrder": ["SimpleModUpdater", "LIES", "Monkeepers", "Iter", "Keepers", "GoonmodCustomWaypoints", "NoDuplicatedBullets"],
+  "groups": {
+    "suite": ["LIES", "Monkeepers", "Iter", "Keepers"],
+    "dependencies": ["SimpleModUpdater", "GoonmodCustomWaypoints", "NoDuplicatedBullets"]
+  },
   "testedWith": {
     "Useful Bots": "2.6.3",
     "HopLib": "2.1.2",
@@ -10,6 +14,7 @@
   "mods": {
     "LIES": {
       "dir": "LIES",
+      "group": "suite",
       "source": "https://github.com/met94/Little-Intelligence-Enhancements-x64",
       "commit": "dc08e92",
       "version": "8.57.33",
@@ -21,6 +26,7 @@
     },
     "Monkeepers": {
       "dir": "Monkeepers",
+      "group": "suite",
       "source": "https://github.com/met94/payday2-mod-Monkeepers",
       "commit": "c1307b7",
       "version": "87.4",
@@ -31,6 +37,7 @@
     },
     "Iter": {
       "dir": "Iter",
+      "group": "suite",
       "source": "https://github.com/met94/payday2-mod-Iter",
       "commit": "891b017",
       "version": "205.3",
@@ -42,6 +49,7 @@
     },
     "Keepers": {
       "dir": "Keepers",
+      "group": "suite",
       "source": "https://github.com/met94/payday2-mod-Keepers",
       "commit": "26408cb",
       "version": "239.3",
@@ -50,9 +58,22 @@
       "docs": true,
       "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
     },
+    "SimpleModUpdater": {
+      "dir": "Simple Mod Updater",
+      "folder": "Simple Mod Updater",
+      "group": "dependencies",
+      "source": "http://pd2mods.z77.fr/update/SimpleModUpdater.zip",
+      "name": "Simple Mod Updater",
+      "commit": "75401af",
+      "version": "34",
+      "priority": 10000,
+      "license": "upstream (no license file)",
+      "exclude": [".git", ".gitignore", "dev", "dist", "tests", ".github", "MAINTAINING.md"]
+    },
     "GoonmodCustomWaypoints": {
       "dir": "GoonmodCustomWaypoints",
-      "source": "https://github.com/met94/payday2-mod-GoonmodCustomWaypoints",
+      "group": "dependencies",
+      "source": "http://pd2mods.z77.fr/update/GoonmodCustomWaypoints.zip",
       "name": "GoonMod's Custom Waypoints",
       "commit": "e82c361",
       "version": "50",
@@ -62,7 +83,8 @@
     },
     "NoDuplicatedBullets": {
       "dir": "NoDuplicatedBullets",
-      "source": "https://github.com/met94/payday2-mod-NoDuplicatedBullets",
+      "group": "dependencies",
+      "source": "http://pd2mods.z77.fr/update/NoDuplicatedBullets.zip",
       "name": "No Duplicated Bullets",
       "commit": "e2d9e92",
       "version": "10",

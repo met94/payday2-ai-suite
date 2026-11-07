@@ -195,7 +195,8 @@ foreach ($Name in $LoadOrder) {
     if ($HeadResult.Lines.Count -gt 0) { $Head = $HeadResult.Lines[0].Trim() }
     if ($Head -ne $Resolved) { Fail "$Name worktree is at $Head, expected $Resolved" }
 
-    $Dest = Join-Path $StageMods $Name
+    $Folder = if ($Mod.folder) { $Mod.folder } else { $Name }
+    $Dest = Join-Path $StageMods $Folder
     if ($Mod.build) {
         $BuildScript = Join-Path $Src $Mod.build
         if (-not (Test-Path -LiteralPath $BuildScript)) { Fail "$Name declares build '$($Mod.build)' but it is missing" }
@@ -204,7 +205,8 @@ foreach ($Name in $LoadOrder) {
         if ($BuildResult.Code -ne 0) { Fail "$Name build script failed" }
         $DistDir = Join-Path $Src $Mod.dist
         if (-not (Test-Path -LiteralPath (Join-Path $DistDir 'mod.txt'))) { Fail "$Name build produced no mod.txt at $DistDir" }
-        Copy-Item -LiteralPath $DistDir -Destination $StageMods -Recurse -Force
+        New-Item -ItemType Directory -Force $Dest | Out-Null
+        Copy-Item -Path (Join-Path $DistDir '*') -Destination $Dest -Recurse -Force
     } else {
         $Exclude = @('.git', '.gitignore', 'dev', 'dist', 'tests', '.github')
         if ($Mod.exclude) { $Exclude = @($Exclude + @($Mod.exclude) | Sort-Object -Unique) }
@@ -299,85 +301,105 @@ if (-not $SkipGates) {
 }
 
 # ---------------------------------------------------------------------------
-# Zip + release notes
+# Zip + release notes (one archive per group)
 # ---------------------------------------------------------------------------
 Step 'archive'
 New-Item -ItemType Directory -Force $OutDir | Out-Null
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 Add-Type -AssemblyName System.IO.Compression
-$ZipPath = Join-Path $OutDir ('AI-Suite-{0}.zip' -f $Lock.suiteVersion)
-$ZipTemp = $ZipPath + '.partial'
-if (Test-Path -LiteralPath $ZipTemp) { Remove-Item -LiteralPath $ZipTemp -Force }
-# Drop any previous build first: a failed gate must not leave an older zip for
-# tests\run-tests.ps1 to pick up and validate as if it were this build.
-if (Test-Path -LiteralPath $ZipPath) { Remove-Item -LiteralPath $ZipPath -Force }
-# Build the archive entry by entry so every name uses '/' (the .NET Framework
-# CreateFromDirectory helper writes '\' on Windows). Write to a temp name so a
-# failed run cannot leave a half-written zip for the tests to pick up.
-try {
-    $Zip = [System.IO.Compression.ZipFile]::Open($ZipTemp, [System.IO.Compression.ZipArchiveMode]::Create)
-    try {
-        foreach ($Name in $LoadOrder) {
-            $ModDir = Join-Path $StageMods $Name
-            foreach ($File in Get-ChildItem -LiteralPath $ModDir -Recurse -File -Force) {
-                $Relative = $File.FullName.Substring($StageMods.Length + 1).Replace('\', '/')
-                [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
-                    $Zip,
-                    $File.FullName,
-                    $Relative,
-                    [System.IO.Compression.CompressionLevel]::Optimal
-                ) | Out-Null
-            }
-        }
-    } finally {
-        $Zip.Dispose()
+
+$GroupInfo = [ordered]@{
+    suite = @{
+        FilePrefix = 'AI-Suite'
+        Title = 'AI Suite'
+        Intro = 'The four maintained AI mods. Extract every folder into `PAYDAY 2\mods\`.'
+        Footer = ('Tested with Useful Bots {0} + HopLib {1}; The Fixes optional.' -f $Lock.testedWith.'Useful Bots', $Lock.testedWith.HopLib)
+        UpdateLine = 'Updates: all four use SuperBLT''s GitHub release feeds.'
     }
-    if (Test-Path -LiteralPath $ZipPath) { Remove-Item -LiteralPath $ZipPath -Force }
-    Move-Item -LiteralPath $ZipTemp -Destination $ZipPath -Force
-} catch {
+    dependencies = @{
+        FilePrefix = 'AI-Suite-Dependencies'
+        Title = 'AI Suite Dependencies'
+        Intro = 'Required by Keepers and therefore Monkeepers. Upstream mods, unmodified. Extract every folder into `PAYDAY 2\mods\`.'
+        Footer = 'These are the original authors'' packages; the suite does not modify them.'
+        UpdateLine = 'Updates: Simple Mod Updater keeps the other two current from the original z77 feed.'
+    }
+}
+
+$BuiltArchives = @()
+foreach ($GroupName in $GroupInfo.Keys) {
+    $Group = $GroupInfo[$GroupName]
+    $GroupMods = @($Lock.loadOrder | Where-Object { $Lock.mods.$_.group -eq $GroupName })
+    if ($GroupMods.Count -eq 0) { Fail "group '$GroupName' has no mods" }
+
+    $ZipPath = Join-Path $OutDir ('{0}-{1}.zip' -f $Group.FilePrefix, $Lock.suiteVersion)
+    $ZipTemp = $ZipPath + '.partial'
     if (Test-Path -LiteralPath $ZipTemp) { Remove-Item -LiteralPath $ZipTemp -Force }
-    Fail "archive failed: $($_.Exception.Message)"
-}
-$Hash = (Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256).Hash
-$Size = (Get-Item -LiteralPath $ZipPath).Length
+    # Drop any previous build first: a failed run must not leave an older zip.
+    if (Test-Path -LiteralPath $ZipPath) { Remove-Item -LiteralPath $ZipPath -Force }
 
-$Lines = New-Object System.Collections.Generic.List[string]
-$Lines.Add('# AI Suite ' + $Lock.suiteVersion)
-$Lines.Add('')
-$Lines.Add('One download: the four-mod AI stack plus Keepers'' two required utilities.')
-$Lines.Add('Extract every folder into `PAYDAY 2\mods\`.')
-$Lines.Add('')
-$Lines.Add('| Mod | Version | Commit | Role | License |')
-$Lines.Add('| --- | --- | --- | --- | --- |')
-foreach ($Name in $LoadOrder) {
-    $Mod = $Lock.mods.$Name
-    $Role = switch ($Name) {
-        'LIES' { 'enemy AI: detection, aim, cover, travel' }
-        'Monkeepers' { 'bot bag logistics' }
-        'Iter' { 'navigation, coarse search, nav-link queue' }
-        'Keepers' { 'bot orders, revives, jokers' }
-        'GoonmodCustomWaypoints' { 'custom waypoints for players (Keepers requirement)' }
-        'NoDuplicatedBullets' { 'client-side duplicate-damage fix (Keepers requirement)' }
-        default { '' }
+    try {
+        $Zip = [System.IO.Compression.ZipFile]::Open($ZipTemp, [System.IO.Compression.ZipArchiveMode]::Create)
+        try {
+            foreach ($Name in $GroupMods) {
+                $Mod = $Lock.mods.$Name
+                $Folder = if ($Mod.folder) { $Mod.folder } else { $Name }
+                $ModDir = Join-Path $StageMods $Folder
+                foreach ($File in Get-ChildItem -LiteralPath $ModDir -Recurse -File -Force) {
+                    $Relative = $File.FullName.Substring($StageMods.Length + 1).Replace('\', '/')
+                    [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                        $Zip,
+                        $File.FullName,
+                        $Relative,
+                        [System.IO.Compression.CompressionLevel]::Optimal
+                    ) | Out-Null
+                }
+            }
+        } finally {
+            $Zip.Dispose()
+        }
+        Move-Item -LiteralPath $ZipTemp -Destination $ZipPath -Force
+    } catch {
+        if (Test-Path -LiteralPath $ZipTemp) { Remove-Item -LiteralPath $ZipTemp -Force }
+        Fail "archive failed: $($_.Exception.Message)"
     }
-    $Lines.Add(('| {0} | {1} | `{2}` | {3} | {4} |' -f $Name, $Mod.version, $Mod.commit, $Role, $Mod.license))
+
+    $Hash = (Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256).Hash
+    $Size = (Get-Item -LiteralPath $ZipPath).Length
+
+    $Lines = New-Object System.Collections.Generic.List[string]
+    $Lines.Add('# ' + $Group.Title + ' ' + $Lock.suiteVersion)
+    $Lines.Add('')
+    $Lines.Add($Group.Intro)
+    $Lines.Add('')
+    $Lines.Add('| Folder | Version | Commit | Role | License |')
+    $Lines.Add('| --- | --- | --- | --- | --- |')
+    foreach ($Name in $GroupMods) {
+        $Mod = $Lock.mods.$Name
+        $Folder = if ($Mod.folder) { $Mod.folder } else { $Name }
+        $Role = switch ($Name) {
+            'LIES' { 'enemy AI: detection, aim, cover, travel' }
+            'Monkeepers' { 'bot bag logistics' }
+            'Iter' { 'navigation, coarse search, nav-link queue' }
+            'Keepers' { 'bot orders, revives, jokers' }
+            'SimpleModUpdater' { 'updater for the z77 mods (Keepers requirement)' }
+            'GoonmodCustomWaypoints' { 'custom waypoints for players (Keepers requirement)' }
+            'NoDuplicatedBullets' { 'client-side duplicate-damage fix (Keepers requirement)' }
+            default { '' }
+        }
+        $Lines.Add(('| {0} | {1} | `{2}` | {3} | {4} |' -f $Folder, $Mod.version, $Mod.commit, $Role, $Mod.license))
+    }
+    $Lines.Add('')
+    $Lines.Add($Group.Footer)
+    $Lines.Add($Group.UpdateLine)
+    $Lines.Add('')
+    $Lines.Add(('Archive: {0} ({1:N0} KB), SHA-256 `{2}`' -f (Split-Path $ZipPath -Leaf), ($Size / 1KB), $Hash))
+    $NotesPath = Join-Path $OutDir ('{0}-{1}-release-notes.md' -f $Group.FilePrefix, $Lock.suiteVersion)
+    Set-Content -LiteralPath $NotesPath -Value ($Lines -join "`n") -Encoding utf8
+
+    $BuiltArchives += [pscustomobject]@{ Group = $GroupName; Zip = $ZipPath; Hash = $Hash; Size = $Size; Notes = $NotesPath }
+    Write-Host ('built {0}  ({1:N0} KB, sha256 {2})' -f $ZipPath, ($Size / 1KB), $Hash) -ForegroundColor Green
 }
-$Lines.Add('')
-$Lines.Add('Load order (priority descending, shipped in each mod.txt): ' + (($LoadOrder | ForEach-Object { '{0} {1}' -f $_, $Lock.mods.$_.priority }) -join ', ') + '.')
-$Lines.Add('')
-$Lines.Add(('Tested with Useful Bots {0} + HopLib {1}; The Fixes optional.' -f $Lock.testedWith.'Useful Bots', $Lock.testedWith.HopLib))
-$Lines.Add('')
-$Lines.Add('Per-mod auto-updates are unchanged: Iter/Keepers/Monkeepers use their GitHub release feeds, LIES uses its ModWorkshop feed.')
-$Lines.Add('')
-$Lines.Add(('Archive: {0} ({1:N0} KB), SHA-256 `{2}`' -f (Split-Path $ZipPath -Leaf), ($Size / 1KB), $Hash))
-$NotesPath = Join-Path $OutDir ('AI-Suite-{0}-release-notes.md' -f $Lock.suiteVersion)
-Set-Content -LiteralPath $NotesPath -Value ($Lines -join "`n") -Encoding utf8
 
 Write-Host ''
-Write-Host "built $ZipPath" -ForegroundColor Green
-Write-Host ('size:   {0:N0} KB' -f ($Size / 1KB))
-Write-Host "sha256: $Hash"
-Write-Host "notes:  $NotesPath"
-Write-Host ''
-Write-Host 'Upload the zip to the ModWorkshop page; users extract it into:'
+Write-Host 'Upload both zips and both release-notes files to the ModWorkshop page; users extract them into:'
 Write-Host '  C:\Program Files (x86)\Steam\steamapps\common\PAYDAY 2\mods'

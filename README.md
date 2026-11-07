@@ -25,7 +25,7 @@ Every feature is tunable: each mod keeps its own settings page under
 
 | Mod | What it does | Version |
 | --- | --- | --- |
-| [**LIES**](https://github.com/met94/Little-Intelligence-Enhancements-x64) | enemy AI: detection, aim, cover, travel, squad coordination | 8.57.32 |
+| [**LIES**](https://github.com/met94/Little-Intelligence-Enhancements-x64) | enemy AI: detection, aim, cover, travel, squad coordination | 8.57.33 |
 | [**Iter**](https://github.com/met94/payday2-mod-Iter) | navigation: pathing, nav-link queueing, level nav fixes | 205.3 |
 | [**Keepers**](https://github.com/met94/payday2-mod-Keepers) | bot orders, revive assistants, converted cops and jokers | 239.3 |
 | [**Monkeepers**](https://github.com/met94/payday2-mod-Monkeepers) | bot bag logistics: pick up, carry and drop bags | 87.4 |
@@ -67,12 +67,12 @@ settings carry over.
 
 ## Updates
 
-- **Iter**, **Keepers** and **Monkeepers** update through SuperBLT's normal
-  update prompt.
-- **LIES** shows its own update prompt in-game and links to its GitHub
-  releases.
-- **GoonMod's Custom Waypoints** and **No Duplicated Bullets** have no SuperBLT
-  update feed; they are only replaced by a new bundle.
+- **LIES**, **Iter**, **Keepers** and **Monkeepers** update through SuperBLT's
+  normal update prompt. (LIES builds older than 8.57.33 still show the old
+  in-game prompt and link to the GitHub release.)
+- **GoonMod's Custom Waypoints** and **No Duplicated Bullets** keep the original
+  author's updater chain (z77 / Simple Mod Updater). This bundle does not change
+  or override it.
 - The mods are versioned separately: updating one does not force a new bundle
   download. A new bundle is published when the whole stack moves.
 

@@ -1,6 +1,6 @@
 {
-  "suiteVersion": "2026.11.06.2",
-  "released": "2026-11-06",
+  "suiteVersion": "2026.11.07",
+  "released": "2026-11-07",
   "loadOrder": ["LIES", "Monkeepers", "Iter", "Keepers", "GoonmodCustomWaypoints", "NoDuplicatedBullets"],
   "testedWith": {
     "Useful Bots": "2.6.3",
@@ -11,8 +11,8 @@
     "LIES": {
       "dir": "LIES",
       "source": "https://github.com/met94/Little-Intelligence-Enhancements-x64",
-      "commit": "8f9514f",
-      "version": "8.57.32",
+      "commit": "dc08e92",
+      "version": "8.57.33",
       "priority": 100,
       "license": "AGPL-3.0",
       "docs": true,

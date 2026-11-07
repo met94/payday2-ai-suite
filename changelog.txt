@@ -1,3 +1,21 @@
+Revision 2026.11.07:
+
+LIES update detection moves to SuperBLT. No gameplay change; the other five
+folders are the same code as 2026.11.06.2.
+
+- LIES 8.57.33 (dc08e92) - `mod.txt` declares the GitHub releases `meta.json`
+  feed, the in-menu update poll and `menunodegui.lua` are removed, and
+  `autoupdate.json` stays in the repository as the bridge for builds older than
+  8.57.33. LIES now appears in SuperBLT's normal update prompt with Iter,
+  Keepers and Monkeepers.
+- GoonMod's Custom Waypoints 50 and No Duplicated Bullets 10 are unchanged and
+  keep the original author's updater chain (z77 / Simple Mod Updater). This
+  bundle does not modify them.
+- Iter 205.3, Keepers 239.3, Monkeepers 87.4 unchanged.
+
+Player notes: nothing changes in-game. If you use SuperBLT's updater, LIES now
+shows up there like the rest of the suite instead of its own in-game message.
+
 Revision 2026.11.06.2:
 
 Keepers' two required utilities now ship in the bundle.

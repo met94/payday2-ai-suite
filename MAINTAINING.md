@@ -135,18 +135,19 @@ The contract itself lives in the workspace, not here:
 - **External mods stay external.** Useful Bots, HopLib and The Fixes are never
   bundled; they are only pinned in the notes/metadata.
 - **The utilities are outside the contract.** `GoonmodCustomWaypoints` and
-  `NoDuplicatedBullets` are redistributed unmodified; do not add ownership rows
-  or change their code in this bundle. If they ever need a fork fix, that lives
-  in their own repo and gets a new pin.
+  `NoDuplicatedBullets` are redistributed unmodified; do not add ownership rows,
+  change their code, or touch their update feeds (`simple_update_url` /
+  `SimpleModUpdater` belong to the original author). If they ever need a fork
+  fix, that lives in their own repo and gets a new pin.
 
 ## Update feeds (why the bundle is not one)
 
 | Mod | Path |
 | --- | --- |
-| Iter, Keepers, Monkeepers | SuperBLT `updates` -> GitHub `releases/latest/download/meta.json` |
-| LIES | its own menu poll of `https://raw.githubusercontent.com/met94/Little-Intelligence-Enhancements-x64/main/autoupdate.json` (`LIES.update_url`, `menumanager.lua:51`, fetched at `:922`); equality compare, links to GitHub releases, never installs |
-| GoonMod's Custom Waypoints, No Duplicated Bullets | legacy `simple_update_url` -> `pd2mods.z77.fr`; no SuperBLT `updates` entry, so nothing updates them except a new bundle (only Simple Mod Updater would, and it would pull the same upstream build) |
+| LIES, Iter, Keepers, Monkeepers | SuperBLT `updates` -> GitHub `releases/latest/download/meta.json` |
+| GoonMod's Custom Waypoints, No Duplicated Bullets | the original author's chain: `simple_update_url` -> `pd2mods.z77.fr` plus the `SimpleModUpdater` `updates` entry. Left untouched by this bundle; Simple Mod Updater is not bundled |
+| LIES (pre-8.57.33) | the legacy bridge `https://raw.githubusercontent.com/met94/Little-Intelligence-Enhancements-x64/main/autoupdate.json` (`LIES-AI-MOD`); still bumped every release, not shipped in the folder |
 
-`autoupdate.json` is served from raw GitHub and is not part of the mod folder or
-the zip. The `LIES-AI-MOD` string is only the identifier inside that JSON; LIES
-has no ModWorkshop page and no SuperBLT feed.
+LIES moved to the SuperBLT feed in 8.57.33; `autoupdate.json` exists only so
+builds older than that still see an update. Remove the bridge once those builds
+have aged out. LIES has no ModWorkshop page.

@@ -11,13 +11,13 @@ page form.
   AI stack in one download, with Keepers' two required utilities included.
 - **Category:** BLT → Gameplay Changing
 - **Tags:** Lua, Gameplay Changing, Bugfix
-- **Version:** 2026.11.06.2
+- **Version:** 2026.11.07
 - **Dependencies (required):** SuperBLT (64-bit)
 - **Dependencies (optional, tested):** Useful Bots 2.6.3
   (`https://modworkshop.net/mod/31221`), The Fixes
   (`https://modworkshop.net/mod/23732`)
 - **Thumbnail:** `art/ai-suite-thumbnail.png`
-- **Download:** `AI-Suite-2026.11.06.2.zip` (six folders at the archive root)
+- **Download:** `AI-Suite-2026.11.07.zip` (six folders at the archive root)
 
 ## Description (paste this)
 
@@ -104,10 +104,10 @@ files are shared with the standalone versions, so your settings carry over.
 
 ### Updating
 
-- Iter, Keepers and Monkeepers update through SuperBLT's normal update prompt.
-- LIES shows its own update prompt in-game and links to its GitHub releases.
-- The two utilities have no SuperBLT update feed; they are replaced by a new
-  bundle.
+- LIES, Iter, Keepers and Monkeepers update through SuperBLT's normal update
+  prompt. (LIES builds older than 8.57.33 still show the old in-game prompt.)
+- GoonMod's Custom Waypoints and No Duplicated Bullets keep the original author's
+  updater chain; this bundle does not change or override it.
 - Each mod is versioned separately, so updating one does not force a new bundle
   download. A new bundle is published when the whole stack moves.
 
@@ -146,6 +146,10 @@ Bundling them does not relicense anything.
 
 ### Changelog
 
+**2026.11.07** — LIES 8.57.33: update detection moves to SuperBLT, so LIES now
+shows up in the normal update prompt with Iter, Keepers and Monkeepers. No
+gameplay change.
+
 **2026.11.06.2** — GoonMod's Custom Waypoints 50 and No Duplicated Bullets 10 are
 now bundled, so Keepers' dependencies are satisfied by the download itself (no
 SuperBLT dependency prompt). Both are the versions the suite is played with;
@@ -160,8 +164,8 @@ Monkeepers 87.4.
 ## Notes for the upload
 
 - Upload the zip from the GitHub release
-  `https://github.com/met94/payday2-ai-suite/releases/tag/v2026.11.06.2`
-  (`AI-Suite-2026.11.06.2.zip`, SHA-256 is printed in the release notes next to
+  `https://github.com/met94/payday2-ai-suite/releases/tag/v2026.11.07`
+  (`AI-Suite-2026.11.07.zip`, SHA-256 is printed in the release notes next to
   it).
 - The archive root must contain the six folders, not a wrapper folder — it
   already does.

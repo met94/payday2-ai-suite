@@ -9,7 +9,7 @@ run (**GoonMod's Custom Waypoints**, **No Duplicated Bullets**, **Simple Mod
 Updater**). They are untouched originals; that archive exists so Keepers works
 out of the box.
 
-[Useful Bots 2.6.3](https://modworkshop.net/mod/31221) (+ HopLib) is the
+[Useful Bots 2.6.4](https://modworkshop.net/mod/31221) (+ HopLib 2.1.2) is the
 recommended companion for bot combat and utility — it is not redistributed here.
 
 ## What it changes in-game
@@ -47,7 +47,7 @@ Every feature is tunable: each mod keeps its own settings page under
 ## Requirements
 
 - **SuperBLT** (64-bit) - required.
-- [**Useful Bots 2.6.3**](https://modworkshop.net/mod/31221) + **HopLib** -
+- [**Useful Bots 2.6.4**](https://modworkshop.net/mod/31221) + **HopLib 2.1.2** -
   recommended. This is the bot combat and utility layer the suite is tested
   with (intimidation, marking, target priority); install it from Hoppip's page.
 - [**The Fixes**](https://modworkshop.net/mod/23732) - optional general-fix

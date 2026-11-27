@@ -88,7 +88,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tests\run-tests.ps1
 4. asserts the staged `mod.txt` name/version/priority and that no `dev/`,
    `dist/`, `tests/`, `.git` or build marker ships;
 5. runs `crossmod-check --strict` against the staged tree with a real Useful
-   Bots 2.6.3 tree (`-UbDir`, `PD2_UB_DIR`, or the live install from the
+   Bots 2.6.4 tree (`-UbDir`, `PD2_UB_DIR`, or the live install from the
    workspace `workspace.json`), plus a Lua syntax gate (`luajit -bl`, or
    `tools\lua-check.mjs` as fallback);
 6. writes one zip per group through a `.partial` temp file, plus a

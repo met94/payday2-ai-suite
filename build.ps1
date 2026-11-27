@@ -17,7 +17,7 @@
     The v2 workspace checkout (default: two levels above this repo).
 
 .PARAMETER UbDir
-    Useful Bots 2.6.3 tree for the ownership gate. Default: PD2_UB_DIR, else
+    Useful Bots 2.6.4 tree for the ownership gate. Default: PD2_UB_DIR, else
     the live install recorded in workspace.json.
 
 .PARAMETER ContractRoot

@@ -7,7 +7,7 @@
     "dependencies": ["SimpleModUpdater", "GoonmodCustomWaypoints", "NoDuplicatedBullets"]
   },
   "testedWith": {
-    "Useful Bots": "2.6.3",
+    "Useful Bots": "2.6.4",
     "HopLib": "2.1.2",
     "The Fixes": "optional"
   },

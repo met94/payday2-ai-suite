@@ -14,8 +14,8 @@ page form.
 - **Tags:** Lua, Gameplay Changing, Bugfix
 - **Version:** 2026.11.07.1
 - **Dependencies (required):** SuperBLT (64-bit)
-- **Dependencies (recommended):** Useful Bots 2.6.3
-  (`https://modworkshop.net/mod/31221`) + HopLib
+- **Dependencies (recommended):** Useful Bots 2.6.4 + HopLib 2.1.2
+  (Useful Bots: `https://modworkshop.net/mod/31221`; HopLib is on the same page)
 - **Dependencies (optional):** The Fixes (`https://modworkshop.net/mod/23732`)
 - **Thumbnail:** `art/ai-suite-thumbnail.png`
 - **Downloads (both files on this page):**
@@ -122,7 +122,7 @@ Everything else is the original authors' design. Upstream projects:
 ### Requirements
 
 - **PAYDAY 2 248.2 x64** and **SuperBLT** — required.
-- **Useful Bots 2.6.3 + HopLib** — recommended; this is the bot combat and
+- **Useful Bots 2.6.4 + HopLib 2.1.2** – recommended; this is the bot combat and
   utility layer the suite is tested with (intimidation, marking, target
   priority), on Hoppip's page: https://modworkshop.net/mod/31221
 - **The Fixes** — optional general-fix mod, works alongside the suite:

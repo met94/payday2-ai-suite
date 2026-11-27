@@ -1,6 +1,6 @@
 # AI Suite
 
-One download for the PAYDAY 2 248.2 x64 AI stack: **LIES**, **Iter**,
+One download for the PAYDAY 2 249 x64 AI stack: **LIES**, **Iter**,
 **Keepers** and **Monkeepers** — the four AI mods we maintain as forks of their
 original projects, packaged together and tested as one stack.
 
@@ -31,10 +31,10 @@ Every feature is tunable: each mod keeps its own settings page under
 
 | Mod | What it does | Version |
 | --- | --- | --- |
-| [**LIES**](https://github.com/met94/Little-Intelligence-Enhancements-x64) | enemy AI: detection, aim, cover, travel, squad coordination | 8.57.33 |
-| [**Iter**](https://github.com/met94/payday2-mod-Iter) | navigation: pathing, nav-link queueing, level nav fixes | 205.3 |
-| [**Keepers**](https://github.com/met94/payday2-mod-Keepers) | bot orders, revive assistants, converted cops and jokers | 239.3 |
-| [**Monkeepers**](https://github.com/met94/payday2-mod-Monkeepers) | bot bag logistics: pick up, carry and drop bags | 87.4 |
+| [**LIES**](https://github.com/met94/Little-Intelligence-Enhancements-x64) | enemy AI | 8.57.36 |
+| [**Iter**](https://github.com/met94/payday2-mod-Iter) | navigation and pathing | 205.7 |
+| [**Keepers**](https://github.com/met94/payday2-mod-Keepers) | bot orders and revives | 239.3 |
+| [**Monkeepers**](https://github.com/met94/payday2-mod-Monkeepers) | bot bag handling | 87.4 |
 
 **`AI-Suite-Dependencies-<version>.zip` — Keepers' requirements (upstream, unmodified):**
 
@@ -46,6 +46,7 @@ Every feature is tunable: each mod keeps its own settings page under
 
 ## Requirements
 
+- **PAYDAY 2 249 x64** (Diesel 3) - required.
 - **SuperBLT** (64-bit) - required.
 - [**Useful Bots 2.6.4**](https://modworkshop.net/mod/31221) + **HopLib 2.1.2** -
   recommended. This is the bot combat and utility layer the suite is tested
@@ -90,11 +91,11 @@ installed and updated, you can skip the second archive.
 
 ## Credits
 
-- **LIES** - fugsystem (original), 248.2 x64 fork maintenance by met94.
+- **LIES** - fugsystem (original), x64 fork maintenance by met94.
 - **Iter**, **Keepers**, **Monkeepers** - TdlQ (original), BangL (Iter
-  maintenance), translations by the authors listed in each `mod.txt`, 248.2
+  maintenance), translations by the authors listed in each `mod.txt`, x64
   fork maintenance by met94.
-- **GoonMod's Custom Waypoints** - Wilko (original), TdlQ (extensions), 248.2
+- **GoonMod's Custom Waypoints** - Wilko (original), TdlQ (extensions), U248
   update r50 by BangL.
 - **No Duplicated Bullets** - TdlQ; 248.2 maintenance by met94.
 - **Simple Mod Updater** - TdlQ, code maintenance by BangL, translations by

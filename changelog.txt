@@ -1,3 +1,22 @@
+Revision 2026.11.27.1:
+
+- LIES 8.57.33 -> 8.57.36, Iter 205.3 -> 205.7. Keepers 239.3 and Monkeepers
+  87.4 are unchanged, and the dependencies archive is unchanged (Simple Mod
+  Updater 34, GoonMod's Custom Waypoints 50, No Duplicated Bullets 10).
+- LIES and Iter are crash fixes; the headline is that LIES no longer overrides
+  the other AI mods at load time, so the stack behaves as one set instead of
+  LIES winning every shared function.
+- Tested on game 249.1 with Useful Bots 2.6.4 + HopLib 2.1.2, The Fixes
+  optional.
+- Published on GitHub Releases. The ModWorkshop page is not updated for this
+  build.
+
+Player notes: nothing new to configure. If you run several of these mods
+together, their changes now apply at the same time instead of LIES quietly
+cancelling them, and a handful of crashes are gone: spawning after 249,
+shield-wall cops, squad members losing an objective mid-move, and a few pathing
+cases in Iter. Keepers and Monkeepers are unchanged.
+
 Revision 2026.11.07.1:
 
 Split into two downloads. No mod code changes for the AI mods.
